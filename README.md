@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📈 Crypto Dashboard
 
-## Getting Started
+**Crypto Dashboard** to aplikacja webowa zbudowana w **Next.js, React i TypeScript**, która umożliwia śledzenie kursów kryptowalut w czasie rzeczywistym. Dane są pobierane z **CoinGecko API**, a wykresy aktualizowane na bieżąco dzięki **React Query** i **Recharts**.
 
-First, run the development server:
+---
 
+## 🛠️ Stack technologiczny
+- **Next.js** – SSR/ISR dla optymalizacji pobierania danych
+- **React + TypeScript** – Nowoczesny frontend
+- **React Query** – Pobieranie i cache’owanie danych API
+- **Recharts** – Wizualizacja kursów na wykresach
+- **TailwindCSS** – Stylizacja interfejsu
+- **Zustand** – Zarządzanie stanem ulubionych kryptowalut
+- **CoinGecko API** – Źródło danych o kursach kryptowalut
+
+---
+
+## 📌 Kluczowe funkcjonalności
+✅ **Wykresy kursów kryptowalut w czasie rzeczywistym** (Live update co 5 sekund)  
+✅ **Wyszukiwarka kryptowalut** z autouzupełnianiem  
+✅ **Lista ulubionych kryptowalut** zapisywana w localStorage  
+✅ **Strona szczegółowa kryptowaluty** z danymi rynkowymi  
+✅ **Filtrowanie i sortowanie** według ceny, market cap, wolumenu  
+✅ **SSR/ISR w Next.js** dla optymalizacji  
+✅ **Responsywny design** dzięki TailwindCSS
+
+---
+
+## 🚀 Jak uruchomić projekt?
+### 1️⃣ Klonowanie repozytorium
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/KotKamil/crypto-dashboard.git
+cd crypto-dashboard
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Instalacja zależności
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3️⃣ Uruchomienie aplikacji w trybie deweloperskim
+```bash
+npm dev  # lub npm run dev
+```
+Aplikacja domyślnie uruchomi się pod `http://localhost:3000`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4️⃣ Budowanie i uruchamianie w trybie produkcyjnym
+```bash
+npm build && npm start  # lub npm run build && npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔗 API CoinGecko – Przykładowe endpointy
+- Pobieranie aktualnych cen kryptowalut:
+  ```bash
+  https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd
+  ```
+- Pobieranie danych historycznych (do wykresów):
+  ```bash
+  https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1&interval=minute
+  ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📌 Możliwe ulepszenia
+🔹 **WebSockets** – zamiast polling’u do jeszcze szybszej aktualizacji cen  
+🔹 **PWA (Progressive Web App)** – aplikacja działająca offline  
+🔹 **Alerty cenowe** – powiadomienia push/email  
+🔹 **Logowanie użytkowników** – NextAuth.js / Firebase Auth
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📜 Licencja
+Projekt dostępny na licencji **MIT**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
