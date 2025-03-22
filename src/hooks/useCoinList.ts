@@ -1,6 +1,7 @@
+"use client";
 import {useCoinListStore} from "@/store/coinListStore";
 import {useEffect} from "react";
-import {fetchCoinList} from "@/app/lib/coingeckoApi";
+import {fetchCoinList} from "@/api/coingeckoApi";
 
 /**
  * Custom hook to fetch and manage coin list data.
