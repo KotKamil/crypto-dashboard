@@ -17,7 +17,7 @@ import { fetchMarketChart } from '@/api/coingeckoApi';
  *   - error: Error message string or null if no error occurred
  */
 export const useMarketChart = (ids: string[], chartPeriod: number = 1) => {
-  const { marketChart, isLoading, error, setMarketChart, setLoading, setError } = useMarketChartStore();
+  const { marketChart, isLoading, error, setMarketChart, setLoading, setError, updateMarketChart } = useMarketChartStore();
   const hasFetched = useRef(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export const useMarketChart = (ids: string[], chartPeriod: number = 1) => {
     };
 
     fetchData();
-  }, [ids, chartPeriod, marketChart, setMarketChart, setLoading, setError]);
+  }, [ids, marketChart, setMarketChart, setLoading, setError]);
 
-  return { marketChart, isLoading, error };
+  return { marketChart, isLoading, error, updateMarketChart };
 };

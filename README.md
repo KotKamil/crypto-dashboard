@@ -20,8 +20,7 @@
 ✅ **Wyszukiwarka kryptowalut** z autouzupełnianiem  
 ✅ **Lista ulubionych kryptowalut** zapisywana w localStorage  
 ✅ **Strona szczegółowa kryptowaluty** z danymi rynkowymi  
-✅ **Filtrowanie i sortowanie** według ceny, market cap, wolumenu  
-✅ **SSR/ISR w Next.js** dla optymalizacji  
+✅ **Filtrowanie i sortowanie** według ceny, market cap, wolumenu 
 ✅ **Responsywny design** dzięki TailwindCSS
 
 ---
