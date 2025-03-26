@@ -3,10 +3,13 @@ import React, {useState, useMemo, useEffect} from 'react';
 import { useCoinList } from "@/hooks/useCoinList";
 import {useMarketChart} from "@/hooks/useMarketChart";
 import { MultiSelect } from "@/components/MultiSelect";
+import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
+import {marketChart2Recharts} from "@/app/lib/formatChartData";
 
 export default function ChartsPage() {
   const { coinList, isLoading, error } = useCoinList();
   const [selectedCoins, setSelectedCoins] = useState<string[]>([]);
+  const [graphDays, setGraphDays] = useState<number>(7);
   const { marketChart, updateMarketChart } = useMarketChart(selectedCoins);
 
   const removeFromSelectedCoins = (coin: string) => {
@@ -24,7 +27,7 @@ export default function ChartsPage() {
 
   useEffect(()=>{
     if(selectedCoins.length > 0) {
-      updateMarketChart(selectedCoins[0], 1);
+      updateMarketChart(selectedCoins[0], graphDays);
     }
   }, [selectedCoins]);
 
@@ -66,25 +69,16 @@ export default function ChartsPage() {
         </div>
       )}
 
-      {marketChart && (
-        <div>
-          <p className="mb-2 font-bold">
-            Market chart:
-          </p>
-          {
-            Object.entries(marketChart).map(([obj, val]) => (
-              <div key={obj}>
-                <p>{obj}</p>
-                <ul>
-                  {val.map((v: string, index: string) => (
-                    <li key={index}>{v}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
-        </div>
-      )}
+      <LineChart width={900} height={600} data={marketChart2Recharts(marketChart)}>
+        <CartesianGrid strokeDasharray="1 1" vertical={false} />
+        <XAxis dataKey="name"/>
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="value" stroke="#8884d8"/>
+      </LineChart>
+
+      <input type="number" value={graphDays} onChange={(e) => setGraphDays(Number(e.target.value))}/>
     </div>
   );
 }
