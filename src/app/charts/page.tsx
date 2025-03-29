@@ -10,7 +10,7 @@ export default function ChartsPage() {
   const { coinList, isLoading, error } = useCoinList();
   const [selectedCoins, setSelectedCoins] = useState<string[]>([]);
   const [graphDays, setGraphDays] = useState<number>(7);
-  const { marketChart, updateMarketChart } = useMarketChart(selectedCoins);
+  const { marketCharts, addMultipleCharts } = useMarketChart(selectedCoins);
 
   const removeFromSelectedCoins = (coin: string) => {
     setSelectedCoins(selectedCoins.filter(c => c !== coin));
@@ -25,15 +25,10 @@ export default function ChartsPage() {
     }));
   }, [coinList]);
 
-  useEffect(()=>{
-    if(selectedCoins.length > 0) {
-      updateMarketChart(selectedCoins[0], graphDays);
-    }
-  }, [selectedCoins]);
-
   useEffect(() => {
-    console.log(marketChart);
-  }, [marketChart]);
+    console.log(marketChart2Recharts(marketCharts));
+  }, [marketCharts]);
+
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
@@ -63,22 +58,30 @@ export default function ChartsPage() {
           {selectedCoins.map((coin, index) => (
             <div className="mb-6 flex items-center" key={index}>
               <span className="font-bold mr-2">{coin}</span>
-              <button onClick={() => removeFromSelectedCoins(coin)} className="py-1 px-3 bg-red-600 rounded-md cursor-pointer">X</button>
+              <button onClick={() => removeFromSelectedCoins(coin)}
+                      className="py-1 px-3 bg-red-600 rounded-md cursor-pointer">X
+              </button>
             </div>
           ))}
         </div>
       )}
 
-      <LineChart width={900} height={600} data={marketChart2Recharts(marketChart)}>
-        <CartesianGrid strokeDasharray="1 1" vertical={false} />
+      <LineChart width={900} height={600} data={marketChart2Recharts(marketCharts)}>
+        <CartesianGrid strokeDasharray="1 1" vertical={false}/>
         <XAxis dataKey="name"/>
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="value" stroke="#8884d8"/>
+        <YAxis/>
+        <Tooltip/>
+        <Legend/>
+        {selectedCoins.map((coin, index) => (
+        <Line key={index} type="monotone" dataKey={coin} stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`}/>
+        ))}
       </LineChart>
 
       <input type="number" value={graphDays} onChange={(e) => setGraphDays(Number(e.target.value))}/>
+      <button onClick={() => addMultipleCharts(selectedCoins, graphDays)}
+              className="py-2 px-4 bg-blue-600 text-white rounded-md ml-2">
+        Add Charts
+      </button>
     </div>
   );
 }

@@ -3,15 +3,18 @@ import {MarketChart} from "@/types/coingeckoApiResponses";
 import {fetchMarketChart} from "@/api/coingeckoApi";
 
 interface MarketState {
-  marketChart: MarketChart;
-
+  marketCharts: Record<string, MarketChart>;
   isLoading: boolean;
   error: string | null;
-  setMarketChart: (data: MarketChart) => void;
+
+  addMarketChart: (coindId: string, data: MarketChart) => void;
+  removeMarketChart: (coinId: string) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string) => void;
 
-  updateMarketChart: (coinIds: string, days: number) => Promise<void>;
+  fetchMarketChart: (coinId: string, days: number) => Promise<void>;
+  fetchMultipleMarketCharts: (coinIds: string[], days: number) => Promise<void>;
+  clearAllCharts: () => void;
 }
 
 /**
@@ -20,23 +23,55 @@ interface MarketState {
  * @returns {MarketState} The state and actions for managing market chart data including
  * prices, market caps, and total volumes over time.
  */
-export const useMarketChartStore = create<MarketState>((set) => ({
-  marketChart: {prices: [], market_caps: [], total_volumes: []},
+export const useMarketChartStore = create<MarketState>((set, get) => ({
+  marketCharts: {},
   isLoading: false,
   error: null,
-  setMarketChart: (data) => set({ marketChart: data }),
+
+  addMarketChart: (coinId, data) => set(state => ({
+    marketCharts: { ...state.marketCharts, [coinId]: data }
+  })),
+
+  removeMarketChart: (coinId) => set(state => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { [coinId]: _, ...rest } = state.marketCharts;
+    return { marketCharts: rest };
+  }),
+
   setLoading: (loading) => set({ isLoading: loading }),
   setError: (error) => set({ error }),
-  updateMarketChart: async (cryptoId, days) => {
+  fetchMarketChart: async (coinId, days) => {
     set({ isLoading: true, error: null });
 
     try {
-      const chartData = await fetchMarketChart(cryptoId, 'usd', days);
-      set({ marketChart: chartData });
+      const chartData = await fetchMarketChart(coinId, 'usd', days);
+      get().addMarketChart(coinId, chartData);
     } catch (error: unknown) {
-      set({ error: `Error fetching chart data ${error}`});
+      set({ error: `Error fetching chart data for ${coinId}: ${error}` });
     } finally {
       set({ isLoading: false });
     }
-  }
+  },
+
+  fetchMultipleMarketCharts: async (coinIds, days) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const promises = coinIds.map(id => fetchMarketChart(id, 'usd', days));
+      const results = await Promise.all(promises);
+
+      const newMarketCharts = coinIds.reduce((acc, coinId, index) => {
+        acc[coinId] = results[index];
+        return acc;
+      }, {} as Record<string, MarketChart>);
+
+      set({ marketCharts: newMarketCharts });
+    } catch (error: unknown) {
+      set({ error: `Error fetching multiple chart data: ${error}` });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  clearAllCharts: () => set({ marketCharts: {} })
 }))
